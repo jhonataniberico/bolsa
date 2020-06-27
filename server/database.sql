@@ -72,3 +72,7 @@ EXCEPTION
 END;
 $BODY$;
 
+
+
+SELECT setval('public.person_id_person_seq', 1, false);
+

@@ -7,6 +7,8 @@ const express = require('express'),
     http = require('http').Server(app);
 
 require('./authenticated');
+require('./Helpers/constants');
+require('./Helpers/validator');
 
 app
     .use(bodyParser.json())

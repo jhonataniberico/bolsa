@@ -9,15 +9,24 @@ const controller = {};
 controller.insert = async (req, res) => {
     try {
         const data = req.body;
-        if (!data.name || !data.last_name || !data.type_doc || !data.number_doc || !data.email || !data.phone) {
-            res.status(400).send({msj: 'Acción no permitida'});
-        }
+
+        __isNull([data.name, data.last_name, data.type_doc, data.number_doc, data.email, data.phone],
+            { status: 400, msg: global.ANP });
+        
+        const lengthName = 60;
+        __maxLengthString(data.name, lengthName, {status: 400, msg: `Máximo ${lengthName} caracteres para el nombre`});
+        __maxLengthString(data.last_name, lengthName, {status: 400, msg: `Máximo ${lengthName} caracteres para el los apellidos`});
+
+        __validTypeDoc(data.type_doc, {status: 400, msg: 'El tipo de docuemnto no es válido'});
+
+        __validNumberDoc(data.number_doc, data.type_doc, {status: 400, msg: 'Número de documento inválido'});
 
         const response = await M_user.userInsert(data);
-        
+
         res.status(200).send(response);
     } catch (err) {
-        res.status(500).send(err);
+        console.log(err);
+        res.status(err.status || 500).send(err);
     }
 }
 
