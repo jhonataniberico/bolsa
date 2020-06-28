@@ -17,10 +17,14 @@ app
     .use(morgan('dev'));
 
 // Routes
-const r_user = require('./User/r_user');
+const r_professional = require('./Professional/r_professional');
+const r_contractor = require('./Contractor/r_contractor');
+const r_work = require('./Work/r_work');
 
 app
-    .use('/user', r_user);
+    .use('/professional', r_professional)
+    .use('/contractor', r_contractor)
+    .use('/work', r_work);
 
 
 http.listen(process.env.PORT || 3000, () => { });

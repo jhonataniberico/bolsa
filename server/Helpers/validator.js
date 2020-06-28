@@ -36,23 +36,23 @@ global.__alphaNumeric = (value) => {
 global.__validNumberDoc = (number_doc, type_doc, msg) => {
     switch (type_doc) {
         case global.CARNET_EXTRANJERIA.value:
-            if (number_doc < global.CARNET_EXTRANJERIA.min || number_doc > global.CARNET_EXTRANJERIA.max) {
+            if (number_doc >= global.CARNET_EXTRANJERIA.min && number_doc <= global.CARNET_EXTRANJERIA.max) {
                 throw msg;
             }
             break;
 
         case global.DNI.value:
-            if (number_doc < global.CARNET_EXTRANJERIA.min || number_doc > global.CARNET_EXTRANJERIA.max) {
+            if (number_doc >= global.CARNET_EXTRANJERIA.min && number_doc <= global.CARNET_EXTRANJERIA.max) {
                 throw msg;
             }
             break;
         case global.PASAPORTE.value:
-            if (number_doc < global.CARNET_EXTRANJERIA.min || number_doc > global.CARNET_EXTRANJERIA.max) {
+            if (number_doc >= global.CARNET_EXTRANJERIA.min && number_doc <= global.CARNET_EXTRANJERIA.max) {
                 throw msg;
             }
             break;
         case global.PTP.value:
-            if (number_doc < global.CARNET_EXTRANJERIA.min || number_doc > global.CARNET_EXTRANJERIA.max) {
+            if (number_doc >= global.CARNET_EXTRANJERIA.min && number_doc <= global.CARNET_EXTRANJERIA.max) {
                 throw msg;
             }
             break;

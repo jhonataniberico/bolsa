@@ -1,6 +1,6 @@
 'use strict'
 
-const M_user = require('./m_user');
+const M_professional = require('./m_professional');
 
 
 const controller = {};
@@ -9,8 +9,8 @@ const controller = {};
 controller.insert = async (req, res) => {
     try {
         const data = req.body;
-
-        __isNull([data.name, data.last_name, data.type_doc, data.number_doc, data.email, data.phone],
+        console.log(data);
+        __isNull([data.name, data.last_name, data.type_doc, data.number_doc, data.email, data.phone, data.user, data.password],
             { status: 400, msg: global.ANP });
         
         const lengthName = 60;
@@ -21,7 +21,7 @@ controller.insert = async (req, res) => {
 
         __validNumberDoc(data.number_doc, data.type_doc, {status: 400, msg: 'Número de documento inválido'});
 
-        const response = await M_user.userInsert(data);
+        const response = await M_professional.insert(data);
 
         res.status(200).send(response);
     } catch (err) {

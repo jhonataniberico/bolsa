@@ -1,7 +1,7 @@
 'use strict'
 
 const express = require('express'),
-    controller = require('./c_user'),
+    controller = require('./c_contractor'),
     api = express.Router();
 
 api
