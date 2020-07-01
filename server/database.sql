@@ -248,7 +248,7 @@ CREATE TABLE public.work
     id_work serial NOT NULL,
     _id_contractor integer NOT NULL,
     _id_professional integer NOT NULL,
-    state character varying(6) COLLATE pg_catalog."default",
+    state character varying(12) COLLATE pg_catalog."default",
     qualification integer,
     register_date timestamp without time zone,
     begin_date timestamp without time zone,
@@ -309,3 +309,47 @@ values
 (1, '4', 'PTP'),
 (1, '1', 'Carné de extranjería'),
 (1, '2', 'Dni');
+
+
+CREATE OR REPLACE FUNCTION public.__work__02_list(
+	__p_id_professional integer DEFAULT NULL,
+	__p_state character varying DEFAULT NULL)
+    RETURNS jsonb
+    LANGUAGE 'plpgsql'
+
+    COST 100
+    VOLATILE 
+    
+AS $BODY$
+
+DECLARE
+    --VARIABLES
+    __result JSONB;
+    __msj_excep CHARACTER VARYING;
+	__works JSONB;
+BEGIN
+
+	SELECT JSON_AGG(w)
+	  INTO __works
+	  FROM work w
+	 WHERE w._id_professional = COALESCE(__p_id_professional, w._id_professional)
+	   AND w.state = COALESCE(__p_state, w.state);
+    
+    -- Respuesta
+    __result := JSONB_BUILD_OBJECT(
+                    'data'    , __works,
+					'status' , 0
+                );
+                
+    RETURN __result;
+
+EXCEPTION
+    WHEN SQLSTATE 'ERROR' THEN
+        __result = JSONB_BUILD_OBJECT('status', 1 , 'msj' , SQLERRM);
+        RETURN __result;
+    WHEN OTHERS THEN
+        GET STACKED DIAGNOSTICS __msj_excep = PG_EXCEPTION_CONTEXT;
+        __result = JSONB_BUILD_OBJECT('status', 2, 'msj' , 'Hubo un error', 'stack_error', SQLERRM);
+        RETURN __result;
+END;
+$BODY$;

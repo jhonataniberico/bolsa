@@ -14,7 +14,7 @@ global.ensureAuth = (req, res, next) => {
             'insert',
         ];
 
-        if (url_NoToken.indexOf(trimmedPath) < 0) {
+        if (/* url_NoToken.indexOf(trimmedPath) < 0 */false) {
             let token = (req.body.token) ? req.body.token : req.query.token;
             if(token == null) {
                 throw {msj : 'La petición no tiene la cabecera de autenticación', status : global.HTTP_400};

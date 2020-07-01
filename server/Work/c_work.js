@@ -44,8 +44,9 @@ controller.delete = async (req, res) => {
 
 controller.list = async (req, res) => {
     try {
-        
-        res.status(200).send([]);
+        const {id_professional, state} = req.query;
+        const response = await M_work.list(id_professional, state);
+        res.status(200).send(response);
     } catch (err) {
         console.log(err);
         res.status(err.status || 500).send(err);
