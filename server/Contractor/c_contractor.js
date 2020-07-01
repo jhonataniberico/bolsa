@@ -16,7 +16,7 @@ controller.insert = async (req, res) => {
         __maxLengthString(data.name, lengthName, {status: 400, msg: `Máximo ${lengthName} caracteres para el nombre`});
         __maxLengthString(data.last_name, lengthName, {status: 400, msg: `Máximo ${lengthName} caracteres para el los apellidos`});
 
-        __validTypeDoc(data.type_doc, {status: 400, msg: 'El tipo de docuemnto no es válido'});
+        __validTypeDoc(data.type_doc, {status: 400, msg: 'El tipo de documento no es válido'});
 
         __validNumberDoc(data.number_doc, data.type_doc, {status: 400, msg: 'Número de documento inválido'});
 
