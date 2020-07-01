@@ -12,3 +12,30 @@ global.SOLICITADO = 'SOLICITADO';
 global.ACEPTADO = 'ACEPTADO';
 global.FINALIZADO = 'FINALIZADO';
 global.CANCELADO = 'CANCELADO';
+
+
+global.print_response_error = async (url, msg, res) => {
+    const errors = [400, 401, 403];
+
+    // Errores de base de datos
+    if(msg.status == 1) {
+        msg.status = 400;
+    } else if(msg.status == 2) {
+        msg.status = 500;
+    }
+
+    // Errores controlados
+    if ( errors.some((e) => e == msg.status) && res) {
+        return res.status(msg.status).send(msg);
+    }
+
+    // Errores no controlados
+    console.log(`${url} ===> `, msg);
+    if (msg.stack_error) {
+        console.log(`${url} msg.stack_error ===> `, msg.stack_error);
+    }
+
+    if (res) {
+        return res.status(500).send(msj);
+    }
+};

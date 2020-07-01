@@ -9,10 +9,9 @@ const controller = {};
 controller.insert = async (req, res) => {
     try {
         const data = req.body;
-        console.log(data);
-
-        // Validaciones
        
+       __isNull([data.id_contractor, data.id_professional, data.description, data.amount_proposed],  { status: 400, msg: global.ANP });
+
         const response = await M_work.insert(data);
 
         res.status(200).send(response);
@@ -53,5 +52,20 @@ controller.list = async (req, res) => {
     }
 }
 
+
+controller.detail = async (req, res) => {
+    try {
+        
+        const {id_work} = req.query;
+
+        __isNull(id_work, { status: 400, msg: global.ANP });
+
+        const response = await M_work.detail(id_work);
+
+        res.status(200).send(response);
+    } catch (err) {
+        global.print_response_error(req.url, err, res);
+    }
+}
 
 module.exports = controller;

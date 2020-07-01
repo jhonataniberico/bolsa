@@ -8,6 +8,7 @@ api
     .post('/insert', ensureAuth, controller.insert)
     .put('/update', ensureAuth, controller.update)
     .delete('/delete', ensureAuth, controller.delete)
-    .get('/list', ensureAuth, controller.list);
+    .get('/list', ensureAuth, controller.list)
+    .get('/detail', ensureAuth, controller.detail)
 
 module.exports = api;

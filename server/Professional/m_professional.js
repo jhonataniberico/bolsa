@@ -5,8 +5,8 @@ const model = {};
 
 model.insert = (data) => {
     return new Promise((resolve, reject) => {
-        let sql = `SELECT * FROM  __professional__01_insert($1,$2,$3,$4,$5,$6,$7,$8) res;`;
-        sql = pgpromise.as.format(sql, [data.name, data.last_name, data.type_doc, data.number_doc, data.email, data.phone, data.user, data.password]);
+        let sql = `SELECT * FROM  __professional__01_insert($1) res;`;
+        sql = pgpromise.as.format(sql, [data]);
         dbp.one(sql).then(data => {
             if (data.res.status !== 0) { return reject(data.res);}
             return resolve(data.res);
