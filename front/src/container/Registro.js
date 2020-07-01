@@ -1,14 +1,16 @@
 import React, {Component, useState, useRef} from "react";
 import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-function App() {
+function Registro() {
     const [name, setName] = useState("");
     const [last_name, setLast] = useState("");
     const [type_doc, setType] = useState("");
     const [number_doc, setNumber] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
-    handleClick => () => {
+    function handleClick() {
         fetch('http://localhost:4000/user/insert/', {
             method: 'POST',
             headers: {
@@ -28,6 +30,9 @@ function App() {
                 if(responseJson['status'] != 0){
                 alert("Alguno de sus datos son incorrectos");
                 return;
+                }else {
+                    alert("Se registró correctamente");
+                    window.location.href = "Dashboard";
                 }
             })
             .catch((error) => {
@@ -35,53 +40,60 @@ function App() {
             });
     }
   return (
-    <div className="container">
+    <div className="container py-5">
         <h4 className="text-center">Registrar Profesional</h4>
-        <Form>
-            <Form.Row>
-                <Form.Group as={Col} controlId="formGridName">
-                <Form.Label>Nombre</Form.Label>
-                <Form.Control type="text" placeholder="Ingrese su nombre" value={name} onChange={setName(name)} />
+        <div className="row">
+            <div className="col-6">
+                <Form.Group controlId="formGridName">
+                    <Form.Label>Nombre</Form.Label>
+                    <Form.Control type="text" placeholder="Ingrese su nombre" value={name} onChange={() => setName(name)} />
                 </Form.Group>
+            </div>
+            <div className="col-6">
 
-                <Form.Group as={Col} controlId="formGridApellido">
-                <Form.Label>Apellido</Form.Label>
-                <Form.Control type="text" placeholder="Ingrese su apellido" value={last_name} onChange={setLast(last_name)} />
+                <Form.Group controlId="formGridApellido">
+                    <Form.Label>Apellido</Form.Label>
+                    <Form.Control type="text" placeholder="Ingrese su apellido" value={last_name} onChange={() => setLast(last_name)} />
                 </Form.Group>
-            </Form.Row>
-
-            <Form.Row>
+            </div>
+        </div>
+        <div className="row">
+            <div className="col-6">
                 <Form.Label>Tipo de documento</Form.Label>
-                <Form.Control as="select" value={type_doc} onChange={setType(type_doc)}>
+                <Form.Control as="select" value={type_doc} onChange={() => setType(type_doc)}>
                     <option>Choose...</option>
                     <option value="DNI">DNI</option>
                     <option value="CARNET DE EXTRANJERÍA">CARNET DE EXTRANJERÍA</option>
                 </Form.Control>
+            </div>
+            <div className="col-6">
 
-                <Form.Group as={Col} controlId="formGridNumero">
+                <Form.Group controlId="formGridNumero">
                 <Form.Label>Nro de documento</Form.Label>
-                <Form.Control type="text" placeholder="Ingrese su apellido" value={number_doc} onChange={setNumber(number_doc)} />
+                <Form.Control type="text" placeholder="Ingrese su apellido" value={number_doc} onChange={() => setNumber(number_doc)} />
                 </Form.Group>
-            </Form.Row>
-
-            <Form.Row>
-                <Form.Group as={Col} controlId="formGridEmail">
+            </div>
+        </div>
+        <div className="row">
+            <div className="col-6">
+                <Form.Group controlId="formGridEmail">
                 <Form.Label>Email</Form.Label>
-                <Form.Control type="email" placeholder="Ingrese su email" value={email} onChange={setEmail(email)} />
+                <Form.Control type="email" placeholder="Ingrese su email" value={email} onChange={() => setEmail(email)} />
                 </Form.Group>
+            </div>
+            <div className="col-6">
 
-                <Form.Group as={Col} controlId="formGridPhone">
+                <Form.Group controlId="formGridPhone">
                 <Form.Label>Número de teléfono</Form.Label>
-                <Form.Control type="number" placeholder="Ingrese su número de teléfono" value={phone} onChange={setPhone(phone)} />
+                <Form.Control type="number" placeholder="Ingrese su número de teléfono" value={phone} onChange={() => setPhone(phone)} />
                 </Form.Group>
-            </Form.Row>
-
-            <Button variant="primary" type="button" onClick={handleClick}>
-                Registrar
-            </Button>
-            </Form>
+            </div>
+        </div>
+        <Button variant="primary" type="button" onClick={handleClick}>
+            Registrar
+        </Button>
     </div>
   );
 }
 
-export default App;
+export default Registro;
