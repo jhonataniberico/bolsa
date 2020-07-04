@@ -34,6 +34,7 @@ CREATE TABLE public.professional_detail
 (
     _id_person integer NOT NULL,
     type_professional character varying(2) COLLATE pg_catalog."default",
+    profession_title CHARACTER VARYING(120),
     schedule jsonb,
     studies jsonb,
     work_experence jsonb,

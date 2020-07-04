@@ -2,6 +2,7 @@
 
 const M_professional = require('./m_professional');
 const M_work = require('../Work/m_work');
+const validator = require('./validator_professional');
 
 
 const controller = {};
@@ -47,7 +48,38 @@ controller.listWork = async (req, res) => {
         const response = await M_work.list(id_professional, state);
 
         res.status(200).send(response);
-    } catch (error) {
+    } catch (err) {
+        global.print_response_error(req.url, err, res);
+    }
+}
+
+controller.updCurriculum = async (req, res) => {
+    try {
+        const data = req.body;
+
+        __isNull([data.id_professional, data.profession_title, data.summary, data.hourly_rate], { status: 400, msg: global.ANP });
+
+
+        if (!validator.validSchedule(data.schedule)) {
+            throw { status: 400, msg: 'Error al subir el horario' };
+        }
+
+        if (!validator.validStudies(data.studies)) {
+            throw { status: 400, msg: 'Error al subir los estudios' };
+        }
+
+        if (!validator.validWorkExperence(data.work_experence)) {
+            throw { status: 400, msg: 'Error al subir la experiencia laboral' };
+        }
+
+        __maxLengthString(data.profession_title, 150, { status: 400, msg: 'Máximo 150 caracteres en título profesional' });
+        __maxLengthString(data.summary, 1000, { status: 400, msg: 'Máximo 1000 caracteres en el resumen' });
+        __isNumeric(data.hourly_rate, { status: 400, msg: 'Error en la tarifa' });
+
+        const response = await M_professional.updCurriculum(data);
+
+        res.status(201).send(response);
+    } catch (err) {
         global.print_response_error(req.url, err, res);
     }
 }

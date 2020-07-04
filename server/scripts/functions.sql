@@ -325,3 +325,60 @@ EXCEPTION
         RETURN __result;
 END;
 $BODY$;
+
+
+-- FUNCTION: public.__professional__02_update_cv(jsonb)
+
+-- DROP FUNCTION public.__professional__02_update_cv(jsonb);
+
+CREATE OR REPLACE FUNCTION public.__professional__02_update_cv(
+	__p_data jsonb)
+    RETURNS jsonb
+    LANGUAGE 'plpgsql'
+
+    COST 100
+    VOLATILE 
+    
+AS $BODY$
+
+DECLARE
+    --VARIABLES
+    __result JSONB;
+    __msj_excep CHARACTER VARYING;
+	__id_person INTEGER;
+BEGIN
+	
+	__id_person:= (__p_data->>'id_professional')::INTEGER;
+	
+	IF NOT EXISTS(SELECT 1 
+				    FROM professional_detail 
+				   WHERE _id_person = __id_person) THEN
+		RAISE EXCEPTION USING ERRCODE = 'ERROR', MESSAGE = 'No existe el profesional';
+	END IF;
+	
+	UPDATE professional_detail
+	   SET profession_title = (__p_data->>'profession_title')::CHARACTER VARYING,
+	       schedule          = (__p_data->>'schedule')::JSONB,
+		   studies           = (__p_data->>'studies')::JSONB,
+		   work_experence    = (__p_data->>'work_experence')::JSONB,
+		   summary           = (__p_data->>'summary'),
+		   hourly_rate       = (__p_data->>'hourly_rate')::NUMERIC
+	 WHERE _id_person = __id_person;
+    
+    -- Respuesta
+    __result := JSONB_BUILD_OBJECT(
+					'status' , 0
+                );
+                
+    RETURN __result;
+
+EXCEPTION
+    WHEN SQLSTATE 'ERROR' THEN
+        __result = JSONB_BUILD_OBJECT('status', 1 , 'msj' , SQLERRM);
+        RETURN __result;
+    WHEN OTHERS THEN
+        GET STACKED DIAGNOSTICS __msj_excep = PG_EXCEPTION_CONTEXT;
+        __result = JSONB_BUILD_OBJECT('status', 2, 'msj' , 'Hubo un error', 'stack_error', SQLERRM);
+        RETURN __result;
+END;
+$BODY$;

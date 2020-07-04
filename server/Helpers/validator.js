@@ -61,3 +61,15 @@ global.__validNumberDoc = (number_doc, type_doc, msg) => {
             throw msg;
     }
 }
+
+global.__isInteger = (value, msj = ANP) => {
+    if (!Number.isInteger(value)) {
+        throw msj;
+    }
+}
+
+global.__isNumeric = (value, msj = ANP) => {
+    if (isNaN(parseFloat(value))) {
+        throw msj;
+    }
+}
