@@ -274,3 +274,54 @@ EXCEPTION
         RETURN __result;
 END;
 $BODY$;
+
+
+-- FUNCTION: public.__work__01_insert(jsonb)
+
+-- DROP FUNCTION public.__work__01_insert(jsonb);
+
+CREATE OR REPLACE FUNCTION public.__work__01_insert(
+	__p_data jsonb)
+    RETURNS jsonb
+    LANGUAGE 'plpgsql'
+
+    COST 100
+    VOLATILE 
+    
+AS $BODY$
+
+DECLARE
+    --VARIABLES
+    __result JSONB;
+    __msj_excep CHARACTER VARYING;
+	__id_work INTEGER;
+BEGIN
+
+	
+	INSERT INTO work (_id_contractor, _id_professional, description, "state", amount_proposed)
+	     VALUES ((__p_data->>'id_contractor')::INTEGER,
+				 (__p_data->>'id_professional')::INTEGER,
+				 __p_data->>'description',
+				 'SOLICITADO',
+				 (__p_data->>'amount_proposed')::numeric)
+	  RETURNING id_work
+	       INTO __id_work;
+    
+    -- Respuesta
+    __result := JSONB_BUILD_OBJECT(
+                    'id_work'    , __id_work,
+					'status' , 0
+                );
+                
+    RETURN __result;
+
+EXCEPTION
+    WHEN SQLSTATE 'ERROR' THEN
+        __result = JSONB_BUILD_OBJECT('status', 1 , 'msj' , SQLERRM);
+        RETURN __result;
+    WHEN OTHERS THEN
+        GET STACKED DIAGNOSTICS __msj_excep = PG_EXCEPTION_CONTEXT;
+        __result = JSONB_BUILD_OBJECT('status', 2, 'msj' , 'Hubo un error', 'stack_error', SQLERRM);
+        RETURN __result;
+END;
+$BODY$;
