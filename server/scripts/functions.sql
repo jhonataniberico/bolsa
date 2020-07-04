@@ -125,12 +125,14 @@ BEGIN
 	  RETURNING id_person
 	       INTO __user_id;
 		   
-	INSERT INTO professional_detail (_id_person, type_professional, schedule, studies, work_experence) 
+	INSERT INTO professional_detail (_id_person, type_professional, schedule, studies, work_experence, summary, hourly_rate) 
 	     VALUES (__user_id,
 				NULLIF(__p_data->>'type_professional',''),
 				NULLIF(__p_data->>'schudele','')::JSONB,
 				NULLIF(__p_data->>'studies','')::JSONB,
-				NULLIF(__p_data->>'work_expence','')::JSONB);
+				NULLIF(__p_data->>'work_expence','')::JSONB,
+				NULLIF(__p_data->>'summary',''),
+				NULLIF(__p_data->>'hourly_rate','')::NUMERIC);
     
     -- Respuesta
     __result := JSONB_BUILD_OBJECT(
@@ -150,6 +152,7 @@ EXCEPTION
         RETURN __result;
 END;
 $BODY$;
+
 
 
 

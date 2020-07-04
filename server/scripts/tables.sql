@@ -37,6 +37,9 @@ CREATE TABLE public.professional_detail
     schedule jsonb,
     studies jsonb,
     work_experence jsonb,
+    summary text COLLATE pg_catalog."default",
+    hourly_rate numeric(8,2),
+    comments jsonb,
     CONSTRAINT "PK__professional_01___id_person" PRIMARY KEY (_id_person),
     CONSTRAINT "FK__person_01___id_person" FOREIGN KEY (_id_person)
         REFERENCES public.person (id_person) MATCH SIMPLE
