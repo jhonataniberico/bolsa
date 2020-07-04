@@ -5,11 +5,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Registro from './container/Registro';
 import Dashboard from './container/Dashboard';
 import Historial from './container/Historial';
+import Curriculum from './container/Curriculum';
 
 function App() {
   return (
     <div>
-      <Historial />
+      <Curriculum />
     </div>
   );
 }
