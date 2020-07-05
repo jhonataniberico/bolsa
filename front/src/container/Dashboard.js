@@ -1,4 +1,4 @@
-import React, {Component, useState, useRef} from "react";
+import React, {Component, useState, useRef, useEffect} from "react";
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -10,6 +10,20 @@ import {Link, Route, BrowserRouter as Router,} from 'react-router-dom';
 import Historial from './Historial';
 
 function MyVerticallyCenteredModal(props) {
+    //console.log(props.idUser)
+    const [datos, setDatos] = useState([]);
+    useEffect(() => { 
+      fetch('http://localhost:4000/work/detail?id_work='+props.idUser, {
+        method: 'GET',
+        }).then((response) => response.json())
+        .then((responseJson) => {
+            //console.log(responseJson['data'][0].full_name);
+            setDatos(responseJson['data']);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    });
     return (
       <Modal
         {...props}
@@ -19,16 +33,34 @@ function MyVerticallyCenteredModal(props) {
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            Modal heading
+            Detalle del trabajo
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <h4>Centered Modal</h4>
-          <p>
-            Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
-            dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac
-            consectetur ac, vestibulum at eros.
-          </p>
+        <h5>Detalle del trabajo:</h5>
+        <p>
+          {datos.description}
+        </p>
+        <h5>Empresa:</h5>
+        <p>
+        {datos.company_name}
+        </p>
+        <h5>Categoría:</h5>
+        <p>
+        {datos.desc_category}
+        </p>
+        <h5>Sub Categoría:</h5>
+        <p>
+        {datos.desc_sub_category}
+        </p>
+        <h5>Fecha:</h5>
+        <p>
+        {datos.register_date}
+        </p>
+        <h5>Monto:</h5>
+        <p>
+        S/. {datos.amount_proposed}
+        </p>
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={props.onHide}>Close</Button>
@@ -39,24 +71,23 @@ function MyVerticallyCenteredModal(props) {
 
 function Dashboard() {
     const [modalShow, setModalShow] = React.useState(false);
+    const [datos, setTabla] = useState([]);
+    const [id_user, setUser] = useState(0);
+    //useEffect(() => console.log('mounted'), []);
+    useEffect(() => { 
+      fetch('http://localhost:4000/professional/listWork?id_professional=1&state=SOLICITADO', {
+            method: 'GET',
+            }).then((response) => response.json())
+            .then((responseJson) => {
+                //console.log(responseJson['data'][0].full_name);
+                setTabla(responseJson['data']);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    });
   return (
-    <Router>
     <div>
-        <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-            <Navbar.Brand href="#home">Bolsa de trabajo</Navbar.Brand>
-            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-            <Navbar.Collapse id="responsive-navbar-nav">
-                <Nav className="mr-auto">
-                <Nav.Link href="Historial">Historial</Nav.Link>
-                <Nav.Link>Curriculum</Nav.Link>
-                </Nav>
-                <Nav>
-                <Nav.Link eventKey={2} href="#memes">
-                    Logout
-                </Nav.Link>
-                </Nav>
-            </Navbar.Collapse>
-        </Navbar>
         <div className="container py-5">
             <div style={{borderWidth: "1px", borderColor: '#000000', borderRadius: '10px', border: '1px solid', padding: '10px'}}>
                 <h5>SOLICITUDES DE TRABAJO</h5>
@@ -76,44 +107,32 @@ function Dashboard() {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                            <td>1</td>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                            <td>Mark</td>
-                            <td><button type="button" className="btn btn-primary" onClick={() => setModalShow(true)}>Ver detalle</button></td>
-                            <td><button type="button" className="btn btn-primary">Acept</button><button type="button" className="btn btn-danger">Cancel</button></td>
-                            </tr>
-                            <tr>
-                            <td>2</td>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                            <td>Mark</td>
-                            <td><button type="button" className="btn btn-primary" onClick={() => setModalShow(true)}>Ver detalle</button></td>
-                            <td><button type="button" className="btn btn-primary">Acept</button><button type="button" className="btn btn-danger">Cancel</button></td>
-                            </tr>
-                            <tr>
-                            <td>3</td>
-                            <td>Larry the Bird</td>
-                            <td>Thornton</td>
-                            <td>@twitter</td>
-                            <td>Mark</td>
-                            <td><button type="button" className="btn btn-primary" onClick={() => setModalShow(true)}>Ver detalle</button></td>
-                            <td><button type="button" className="btn btn-primary">Acept</button><button type="button" className="btn btn-danger">Cancel</button></td>
-                            </tr>
+                          {datos.map(item => (
+                              <tr key={item.id_work}>
+                                <td>1</td>
+                                <td>{item.company_name}</td>
+                                <td>{item.full_name}</td>
+                                <td>{item.phone}</td>
+                                <td>{item.email}</td>
+                                <td><button type="button" className="btn btn-primary" onClick={() => {setModalShow(true); setUser(item.id_work)}}>Ver detalle</button></td>
+                                <td><button type="button" className="btn btn-primary">Acept</button><button type="button" className="btn btn-danger">Cancel</button></td>
+                              </tr>
+                          ))
+                          }
                         </tbody>
                     </Table>
+                    {modalShow == true ? 
                     <MyVerticallyCenteredModal
-                        show={modalShow}
-                        onHide={() => setModalShow(false)}
-                    />
+                    show={modalShow}
+                    onHide={() => setModalShow(false)}
+                    idUser={id_user}
+                /> : <p></p>
+                  }
+                    
                 </div>
             </div>
         </div>
     </div>
-    </Router>
   );
 }
 

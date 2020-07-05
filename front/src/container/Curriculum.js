@@ -40,25 +40,94 @@ function MyVerticallyCenteredModal(props) {
   }
 
 function Curriculum() {
-    const [modalShow, setModalShow] = React.useState(false);
+    const [titulo, setTitulo] = useState("");
+    const [resumen, setResumen] = useState("");
+    const [precio, setPrecio] = useState("");
+    const [pais, setPais] = useState("");
+    const [universidad, setUniversidad] = useState("");
+    const [carrera, setCarrera] = useState("");
+    const [fini, setFini] = useState("");
+    const [ffin, setFfin] = useState("");
+    const [mini, setMini] = useState("");
+    const [mfin, setMfin] = useState("");
+    const [position, setTitulowork] = useState("");
+    const [empresa, setEmpresa] = useState("");
+    const [summary, setSummary] = useState("");
+    const [work_fini, setWorkfini] = useState("");
+    const [work_ffin, setWorkffin] = useState("");
+    const [work_mini, setWorkmini] = useState("");
+    const [work_mfin, setWorkmfin] = useState("");
+    const [studies, setEstudios] = useState([]);
+    const [work_experence, setWork] = useState([]);
+    function handleClick() {
+        if(titulo == "" || resumen == "" || precio == "" || pais == "" || universidad == "" || carrera == "" || fini == "" || ffin == "" || mini == "" || mfin == "" || position == "" || empresa == "" || summary == "" || work_fini == "" || work_ffin == "" || work_mini == "" || work_mfin == "" || studies == [] || studies == []){
+            alert("ingrese todos los campos");
+            return;
+        }else {
+            const general = JSON.stringify({
+                id_professional : 1,
+                profession_title : titulo,
+                summary : resumen,
+                hourly_rate : precio,
+                schedule : null,
+                studies : studies,
+                work_experence : work_experence});
+                //console.log(general);
+            fetch('http://localhost:4000/professional/updCurriculum', {
+                method: 'PUT',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: general,
+                }).then((response) => response.json())
+                .then((responseJson) => {
+                    console.log(responseJson);
+                    if(responseJson['status'] != 0){
+                    alert("Alguno de sus datos son incorrectos");
+                    return;
+                    }else {
+                        alert("Se registró correctamente");
+                        //window.location.href = "Dashboard";
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
+    }
+
+    function agregarEstudios(){
+        const estudios = [
+            {
+                "id_country": "",
+                "country": pais,
+                "study_center": universidad,
+                "profession_title": carrera,
+                "year_init": fini,
+                "month_init": mini,
+                "year_end": ffin,
+                "month_end": mfin,
+            }
+        ];
+        setEstudios(estudios);
+    }
+    function agregarTrabajo(){
+        const trabajo = [
+            {
+                "position": position,
+                "company": empresa,
+                "year_init": work_fini,
+                "month_init": work_mini,
+                "year_end": work_ffin,
+                "month_end": work_mfin,
+                "summary": summary,
+            }
+        ];
+        setWork(trabajo);
+    }
   return (
     <div>
-        <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-            <Navbar.Brand href="#home">Bolsa de trabajo</Navbar.Brand>
-            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-            <Navbar.Collapse id="responsive-navbar-nav">
-                <Nav className="mr-auto">
-                <Nav.Link href="#features">Historial</Nav.Link>
-                <Nav.Link href="#pricing">Curriculum</Nav.Link>
-                </Nav>
-                <Nav>
-                <Nav.Link href="#deets">Perfil</Nav.Link>
-                <Nav.Link eventKey={2} href="#memes">
-                    Logout
-                </Nav.Link>
-                </Nav>
-            </Navbar.Collapse>
-        </Navbar>
         <div className="container py-5">
             <div style={{borderWidth: "1px", borderColor: '#000000', borderRadius: '10px', border: '1px solid', padding: '10px'}}>
                 <h5>CREAR UN CURRICULUM VITAE</h5>
@@ -72,14 +141,14 @@ function Curriculum() {
                             <div className="col-6">
                                 <Form.Group controlId="formGridName">
                                     <Form.Label>Título profesional</Form.Label>
-                                    <Form.Control type="text" placeholder="Ingrese su título profesional" />
+                                    <Form.Control type="text" placeholder="Ingrese su título profesional" onChange={ (e) => setTitulo(e.target.value) } />
                                 </Form.Group>
                             </div>
                             <div className="col-6">
 
                                 <Form.Group controlId="formGridApellido">
                                     <Form.Label>Resumen</Form.Label>
-                                    <Form.Control type="text" placeholder="Ingrese un resumen" />
+                                    <Form.Control type="text" placeholder="Ingrese un resumen" onChange={ (e) => setResumen(e.target.value) } />
                                 </Form.Group>
                             </div>
                         </div>
@@ -87,7 +156,7 @@ function Curriculum() {
                             <div className="col-6">
                                 <Form.Group controlId="formGridName">
                                     <Form.Label>Tasa por hora</Form.Label>
-                                    <Form.Control type="text" placeholder="Ingrese la tasa por hora" />
+                                    <Form.Control type="number" placeholder="Ingrese la tasa por hora" onChange={ (e) => setPrecio(e.target.value) } />
                                 </Form.Group>
                             </div>
                         </div>
@@ -95,19 +164,26 @@ function Curriculum() {
                     <Tab eventKey="home" title="Educación">
                         <h4 className="text-center mt-4">EDUCACIÓN</h4>
                         <div className="row p-4">
-                            <div className="col-6">
+                            <div className="col-4">
                                 <Form.Label>País</Form.Label>
-                                <Form.Control as="select">
+                                <Form.Control as="select" onChange={ (e) => setPais(e.target.value) }>
                                     <option>Seleccione...</option>
-                                    <option value="DNI">Perú</option>
-                                    <option value="CARNET DE EXTRANJERÍA">Brasil</option>
+                                    <option value="Peru">Perú</option>
+                                    <option value="Brasil">Brasil</option>
                                 </Form.Control>
                             </div>
-                            <div className="col-6">
+                            <div className="col-4">
 
                                 <Form.Group controlId="formGridNumero">
                                 <Form.Label>Universidad / Instituto</Form.Label>
-                                <Form.Control type="text" placeholder="Ingrese su universidad/instituto" />
+                                <Form.Control type="text" placeholder="Ingrese su universidad/instituto" onChange={ (e) => setUniversidad(e.target.value) } />
+                                </Form.Group>
+                            </div>
+                            <div className="col-4">
+
+                                <Form.Group controlId="formGridNumero">
+                                <Form.Label>Carrera</Form.Label>
+                                <Form.Control type="text" placeholder="Ingrese su carrera" onChange={ (e) => setCarrera(e.target.value) } />
                                 </Form.Group>
                             </div>
                         </div>
@@ -115,19 +191,34 @@ function Curriculum() {
                             <div className="col-6">
                                 <Form.Group controlId="formGridName">
                                     <Form.Label>Año de inicio</Form.Label>
-                                    <Form.Control type="date" placeholder="Ingrese el año de inicio" />
+                                    <Form.Control type="number" placeholder="Ingrese el año de inicio" onChange={ (e) => setFini(e.target.value) } />
                                 </Form.Group>
                             </div>
                             <div className="col-6">
 
                                 <Form.Group controlId="formGridApellido">
                                     <Form.Label>Año de fin</Form.Label>
-                                    <Form.Control type="date" placeholder="Ingrese el año de fin" />
+                                    <Form.Control type="number" placeholder="Ingrese el año de fin" onChange={ (e) => setFfin(e.target.value) } />
+                                </Form.Group>
+                            </div>
+                        </div>
+                        <div className="row p-4">
+                            <div className="col-6">
+                                <Form.Group controlId="formGridName">
+                                    <Form.Label>Mes de inicio</Form.Label>
+                                    <Form.Control type="number" placeholder="Ingrese el mes de inicio" onChange={ (e) => setMini(e.target.value) } />
+                                </Form.Group>
+                            </div>
+                            <div className="col-6">
+
+                                <Form.Group controlId="formGridApellido">
+                                    <Form.Label>Mes de fin</Form.Label>
+                                    <Form.Control type="number" placeholder="Ingrese el mes de fin" onChange={ (e) => setMfin(e.target.value) } />
                                 </Form.Group>
                             </div>
                         </div>
                         <div className="ml-4">
-                            <button type="button" className="btn btn-primary">Agregar</button>
+                            <button type="button" className="btn btn-primary" onClick={agregarEstudios}>Agregar</button>
                         </div>
                     </Tab>
                     <Tab eventKey="profile" title="Experiencia Laboral">
@@ -136,63 +227,62 @@ function Curriculum() {
                             <div className="col-6">
                                 <Form.Group controlId="formGridName">
                                     <Form.Label>Título</Form.Label>
-                                    <Form.Control type="text" placeholder="Título" />
+                                    <Form.Control type="text" placeholder="Título" onChange={ (e) => setTitulowork(e.target.value) } />
                                 </Form.Group>
                             </div>
                             <div className="col-6">
 
                                 <Form.Group controlId="formGridApellido">
                                     <Form.Label>Compañía</Form.Label>
-                                    <Form.Control type="text" placeholder="Ingrese la compañía" />
+                                    <Form.Control type="text" placeholder="Ingrese la compañía" onChange={ (e) => setEmpresa(e.target.value) } />
                                 </Form.Group>
                             </div>
                         </div>
                         <div className="row p-4">
                             <div className="col-6">
                                 <Form.Group controlId="formGridName">
-                                    <Form.Label>Comenzó</Form.Label>
-                                    <Form.Control type="date" placeholder="Título" />
+                                    <Form.Label>Año Comenzó</Form.Label>
+                                    <Form.Control type="number" placeholder="Año en la que empezó" onChange={ (e) => setWorkfini(e.target.value) }  />
                                 </Form.Group>
                             </div>
                             <div className="col-6">
 
                                 <Form.Group controlId="formGridApellido">
-                                    <Form.Label>Finalizó</Form.Label>
-                                    <Form.Control type="date" placeholder="Ingrese la compañía" />
+                                    <Form.Label>Año en el que Finalizó</Form.Label>
+                                    <Form.Control type="number" placeholder="Año en la que finalizó" onChange={ (e) => setWorkffin(e.target.value) } />
+                                </Form.Group>
+                            </div>
+                        </div>
+                        <div className="row p-4">
+                            <div className="col-6">
+                                <Form.Group controlId="formGridName">
+                                    <Form.Label>Mes Comenzó</Form.Label>
+                                    <Form.Control type="number" placeholder="Mes en la que empezó" onChange={ (e) => setWorkmini(e.target.value) }  />
+                                </Form.Group>
+                            </div>
+                            <div className="col-6">
+
+                                <Form.Group controlId="formGridApellido">
+                                    <Form.Label>Mes en el que Finalizó</Form.Label>
+                                    <Form.Control type="number" placeholder="Mes en la que finalizó" onChange={ (e) => setWorkmfin(e.target.value) } />
+                                </Form.Group>
+                            </div>
+                        </div>
+                        <div className="row p-4">
+                            <div className="col-6">
+                                <Form.Group controlId="formGridApellido">
+                                    <Form.Label>Resumen</Form.Label>
+                                    <Form.Control type="text" placeholder="Ingrese un resumen" onChange={ (e) => setSummary(e.target.value) } />
                                 </Form.Group>
                             </div>
                         </div>
                         <div className="ml-4">
-                            <button type="button" className="btn btn-primary">Agregar</button>
-                        </div>
-                    </Tab>
-                    <Tab eventKey="contact" title="Portafólio">
-                        <h4 className="text-center mt-4">PORTAFOLIO DE TRABAJOS</h4>
-                        <div className="row p-4">
-                            <div className="col-6">
-                                <Form.Group>
-                                    <Form.File id="exampleFormControlFile1" label="Añadir trabajo" />
-                                </Form.Group>
-                            </div>
-                            <div className="col-6">
-                                <Form.Group controlId="formGridApellido">
-                                    <Form.Label>Descripción</Form.Label>
-                                    <Form.Control type="text" placeholder="Ingrese una descripción" />
-                                </Form.Group>
-                            </div>
-                        </div>
-                        <div className="row p-4">
-                            <div className="col-6">
-                                <Form.Group controlId="formGridApellido">
-                                    <Form.Label>Habilidades</Form.Label>
-                                    <Form.Control type="text" placeholder="Ingrese sus habilidades" />
-                                </Form.Group>
-                            </div>
+                            <button type="button" className="btn btn-primary" onClick={agregarTrabajo}>Agregar</button>
                         </div>
                     </Tab>
                 </Tabs>
                 <div className="text-right ml-4">
-                        <button type="button" className="btn btn-primary">Guardar Todo</button>
+                        <button type="button" className="btn btn-primary" onClick={handleClick}>Crear CV</button>
                     </div>
                 </div>
             </div>

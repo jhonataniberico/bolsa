@@ -10,8 +10,11 @@ function Registro() {
     const [number_doc, setNumber] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
+    const [user, setUser] = useState("");
+    const [password, setPassword] = useState("");
     function handleClick() {
-        fetch('http://localhost:4000/user/insert/', {
+        console.log("nombre: "+name);
+        fetch('http://localhost:4000/professional/insert', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -24,15 +27,19 @@ function Registro() {
                 number_doc: number_doc,
                 email: email,
                 phone: phone,
+                user: user,
+                password: password,
+                type_professional: "1",
             }),
             }).then((response) => response.json())
             .then((responseJson) => {
+                //console.log(responseJson);
                 if(responseJson['status'] != 0){
                 alert("Alguno de sus datos son incorrectos");
                 return;
                 }else {
                     alert("Se registró correctamente");
-                    window.location.href = "Dashboard";
+                    //window.location.href = "Dashboard";
                 }
             })
             .catch((error) => {
@@ -46,31 +53,31 @@ function Registro() {
             <div className="col-6">
                 <Form.Group controlId="formGridName">
                     <Form.Label>Nombre</Form.Label>
-                    <Form.Control type="text" placeholder="Ingrese su nombre" value={name} onChange={() => setName(name)} />
+                    <Form.Control type="text" placeholder="Ingrese su nombre" onChange={ (e) => setName(e.target.value) } />
                 </Form.Group>
             </div>
             <div className="col-6">
 
                 <Form.Group controlId="formGridApellido">
                     <Form.Label>Apellido</Form.Label>
-                    <Form.Control type="text" placeholder="Ingrese su apellido" value={last_name} onChange={() => setLast(last_name)} />
+                    <Form.Control type="text" placeholder="Ingrese su apellido" onChange={ (e) => setLast(e.target.value) } />
                 </Form.Group>
             </div>
         </div>
         <div className="row">
             <div className="col-6">
                 <Form.Label>Tipo de documento</Form.Label>
-                <Form.Control as="select" value={type_doc} onChange={() => setType(type_doc)}>
-                    <option>Choose...</option>
-                    <option value="DNI">DNI</option>
-                    <option value="CARNET DE EXTRANJERÍA">CARNET DE EXTRANJERÍA</option>
+                <Form.Control as="select" onChange={ (e) => setType(e.target.value) }>
+                    <option>Select...</option>
+                    <option value="2">DNI</option>
+                    <option value="1">CARNET DE EXTRANJERÍA</option>
                 </Form.Control>
             </div>
             <div className="col-6">
 
                 <Form.Group controlId="formGridNumero">
                 <Form.Label>Nro de documento</Form.Label>
-                <Form.Control type="text" placeholder="Ingrese su apellido" value={number_doc} onChange={() => setNumber(number_doc)} />
+                <Form.Control type="text" placeholder="Ingrese su número de documento" onChange={ (e) => setNumber(e.target.value) } />
                 </Form.Group>
             </div>
         </div>
@@ -78,14 +85,29 @@ function Registro() {
             <div className="col-6">
                 <Form.Group controlId="formGridEmail">
                 <Form.Label>Email</Form.Label>
-                <Form.Control type="email" placeholder="Ingrese su email" value={email} onChange={() => setEmail(email)} />
+                <Form.Control type="email" placeholder="Ingrese su email" onChange={ (e) => setEmail(e.target.value) } />
                 </Form.Group>
             </div>
             <div className="col-6">
 
                 <Form.Group controlId="formGridPhone">
                 <Form.Label>Número de teléfono</Form.Label>
-                <Form.Control type="number" placeholder="Ingrese su número de teléfono" value={phone} onChange={() => setPhone(phone)} />
+                <Form.Control type="number" placeholder="Ingrese su número de teléfono" onChange={ (e) => setPhone(e.target.value) } />
+                </Form.Group>
+            </div>
+        </div>
+        <div className="row">
+            <div className="col-6">
+                <Form.Group controlId="formGridEmail">
+                <Form.Label>Usuario</Form.Label>
+                <Form.Control type="text" placeholder="Ingrese su usuario" onChange={ (e) => setUser(e.target.value) } />
+                </Form.Group>
+            </div>
+            <div className="col-6">
+
+                <Form.Group controlId="formGridPhone">
+                <Form.Label>Contraseña</Form.Label>
+                <Form.Control type="password" placeholder="Ingrese su contraseña" onChange={ (e) => setPassword(e.target.value) } />
                 </Form.Group>
             </div>
         </div>
